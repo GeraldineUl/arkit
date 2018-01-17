@@ -85,3 +85,19 @@ func lineFrom(vector vector1: SCNVector3, toVector vector2: SCNVector3) -> SCNGe
     
     return SCNGeometry(sources: [source], elements: [element])
 }
+
+
+// So, hier angelagt kann fast nix mehr schief gehen. Wir holen uns aus
+// unserem Model die Box raus. Und setzen dann einfach unser selbst
+// ausgewähltes Bild als diffuses Material drauf.
+// Tadaaaa, und fertig :)
+func updateTextureOnBoxes(_ model: SCNNode, image: UIImage) {
+    let material = SCNMaterial()
+    material.diffuse.contents = image
+    
+    if let node = model.childNode(withName: "plane", recursively: true) {
+        node.geometry?.materials = [material];
+    }
+}
+
+

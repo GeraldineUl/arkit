@@ -1,32 +1,4 @@
-/**
- * Copyright (c) 2017 Razeware LLC
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
- * distribute, sublicense, create a derivative work, and/or sell copies of the
- * Software in any work that is designed, intended, or marketed for pedagogical or
- * instructional purposes related to programming, coding, application development,
- * or information technology.  Permission for such use, copying, modification,
- * merger, publication, distribution, sublicensing, creation of derivative works,
- * or sale is expressly withheld.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
+
 
 import UIKit
 import ARKit
@@ -34,61 +6,84 @@ import ARKit
 enum FunctionMode {
   case none
   case placeObject(String)
-  case measure
 }
 
-class HomeHeroViewController: UIViewController {
+class HomeHeroViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
   
   @IBOutlet var sceneView: ARSCNView!
-  @IBOutlet weak var chairButton: UIButton!
-  @IBOutlet weak var candleButton: UIButton!
-  @IBOutlet weak var measureButton: UIButton!
-  @IBOutlet weak var vaseButton: UIButton!
-  @IBOutlet weak var distanceLabel: UILabel!
+  @IBOutlet weak var polaroidButton: UIButton!
   @IBOutlet weak var crosshair: UIView!
   @IBOutlet weak var messageLabel: UILabel!
   @IBOutlet weak var trackingInfo: UILabel!
   
   var currentMode: FunctionMode = .none
   var objects: [SCNNode] = []
-  var measuringNodes: [SCNNode] = []
+ 
+ 
+
+  let imagePicker = UIImagePickerController()
+  var pickedTexture : UIImage?
+  
+
+
   
   override func viewDidLoad() {
+    //Hier wird dem Imagepicker gesagt, dass er dem HomeViewController bescheid geben soll, sobald ein Bild ausgewählt wurde
+    imagePicker.delegate = self
+
+    
     super.viewDidLoad()
     runSession()
     trackingInfo.text = ""
     messageLabel.text = ""
-    distanceLabel.isHidden = true
-    selectVase()
+    selectPolaroid()
+    imagePicker.delegate = self
+    
   }
   
-  @IBAction func didTapChair(_ sender: Any) {
-    currentMode = .placeObject("Models.scnassets/chair/chair.scn")
-    selectButton(chairButton)
+
+  // Diese Delegate Funktion wird aufgerufen, sobald der Nutzer im Image Picker
+  // ein Bild ausgewählt hat. Damit das Bild später verwendet werden kann, speichern
+  // wir es uns auf eine eigene Variable namens "pickedTexture". Die verwenden
+  // wir beim Zusammensetzen der Box später einfach als Textur. Also kein Paket mehr,
+  // sondern ein Selfie als Textur :D
+  
+  
+  func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+    if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
+      self.pickedTexture = pickedImage
+    }
+    
+    dismiss(animated: true, completion: nil)
   }
   
-  @IBAction func didTapCandle(_ sender: Any) {
-    currentMode = .placeObject("Models.scnassets/candle/candle.scn")
-    selectButton(candleButton)
+
+  // Falls der Nutzer kein Bild wählen möchte und einfach auf Cancel drückt,
+  // machen wir einfach nix, sondern werfen nur den Dialog vom Bildschirm.
+  func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+    dismiss(animated: true, completion: nil)
   }
   
-  @IBAction func didTapMeasure(_ sender: Any) {
-    currentMode = .measure
-    selectButton(measureButton)
-  }
   
-  @IBAction func didTapVase(_ sender: Any) {
-    selectVase()
+  @IBAction func didTapPolaroid(_ sender: Any) {
+    currentMode = .placeObject("Models.scnassets/polaroid/polaroid.scn")
+    selectButton(polaroidButton)
+    
+    //Funktion zum Auswählen aus der Fotobibliothek
+    
+    imagePicker.allowsEditing = false
+    imagePicker.sourceType = .photoLibrary
+    present(self.imagePicker, animated: true, completion: nil)
   }
+
   
   @IBAction func didTapReset(_ sender: Any) {
     removeAllObjects()
-    distanceLabel.text = ""
   }
   
-  func selectVase() {
-    currentMode = .placeObject("Models.scnassets/vase/vase.scn")
-    selectButton(vaseButton)
+  func selectPolaroid() {
+    currentMode = .placeObject("Models.scnassets/polaroid/polaroid.scn")
+    selectButton(polaroidButton)
   }
   
   func selectButton(_ button: UIButton) {
@@ -97,7 +92,7 @@ class HomeHeroViewController: UIViewController {
   }
   
   func unselectAllButtons() {
-    [chairButton, candleButton, measureButton, vaseButton].forEach {
+    [polaroidButton].forEach {
       $0?.isSelected = false
     }
   }
@@ -112,7 +107,7 @@ class HomeHeroViewController: UIViewController {
   
   func runSession() {
     sceneView.delegate = self
-    let configuration = ARWorldTrackingSessionConfiguration()
+    let configuration = ARWorldTrackingConfiguration()
     configuration.planeDetection = .horizontal
     configuration.isLightEstimationEnabled = true
     sceneView.session.run(configuration)
@@ -121,16 +116,176 @@ class HomeHeroViewController: UIViewController {
     #endif
   }
   
+  override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    if let hit = sceneView.hitTest(viewCenter, types: [.existingPlaneUsingExtent]).first {
+      sceneView.session.add(anchor: ARAnchor(transform: hit.worldTransform))
+      return
+    } else if let hit = sceneView.hitTest(viewCenter, types: [.featurePoint]).last {
+      sceneView.session.add(anchor: ARAnchor(transform: hit.worldTransform))
+      return
+    }
+  }
+
+
+  func updateTrackingInfo() {
+
+    guard let frame = sceneView.session.currentFrame else {
+      return
+    }
+    switch frame.camera.trackingState {
+      case .limited(let reason):
+        switch reason {
+          case .excessiveMotion:
+            trackingInfo.text = "Limited Tracking: Excessive Motion"
+          case .insufficientFeatures:
+            trackingInfo.text = "Limited Tracking: Insufficient Details"
+          default:
+            trackingInfo.text = "Limited Tracking"
+        }
+      default:
+        trackingInfo.text = ""
+    }
+
+    guard let lightEstimate = frame.lightEstimate?.ambientIntensity else {
+      return
+    }
+
+    if lightEstimate < 100 {
+      trackingInfo.text = "Limited Tracking: Too Dark"
+    }
+  }
   
-  
-  
-  
-  
-  
+//  // func selectImage
+//  
+//  func createPolaroid(){
+//
+//
+//      let polaroidClone = SCNScene(named:"Models.scnassets/polaroid/polaroid.scn")!.rootNode.clone()
+//
+//      let imageNode = polaroidClone.childNode(withName: "plane", recursively: true)
+//
+//      if let polaroid = imageNode {
+//        let geo = polaroid.geometry as! SCNPlane
+//
+//        let imageMaterial = SCNMaterial()
+//        imageMaterial.diffuse.contents = selectedImage
+//        geo.materials = [imageMaterial]
+//      }
+//
+//  }
 }
+
+
 
 extension HomeHeroViewController: ARSCNViewDelegate {
 
+
+  func session(_ session: ARSession, didFailWithError error: Error) {
+
+    showMessage(error.localizedDescription, label: messageLabel, seconds: 2)
+
+  }
+
+  func sessionWasInterrupted(_ session: ARSession) {
+
+    showMessage("Session interuppted", label: messageLabel, seconds: 2)
+
+  }
+
+  func sessionInterruptionEnded(_ session: ARSession) {
+
+    showMessage("Session resumed", label: messageLabel, seconds: 2)
+    removeAllObjects()
+    runSession()
+
+  }
+
+
+
+  func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
+
+    DispatchQueue.main.async {
+      self.updateTrackingInfo()
+    }
+
+  }
+
+
+  func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
+
+    DispatchQueue.main.async {
+      if let planeAnchor = anchor as? ARPlaneAnchor {
+        #if DEBUG
+          let planeNode = createPlaneNode(center: planeAnchor.center, extent: planeAnchor.extent)
+          node.addChildNode(planeNode)
+  
+        #endif
+      } else {
+        
+        switch self.currentMode {
+        case .none:
+          break
+        case .placeObject(let name):
+          let modelClone = SCNScene(named: name)!.rootNode.clone()
+         
+          
+//          if self.polaroidButton.isSelected || self.beerButton.isSelected {
+//            updatePhysicsOnBoxes(modelClone)
+//          }
+          
+          // 5)
+          // ACHTUNG: HIER GUCKEN!
+          // Hier rufen wir eine kleine Hilfsmethode auf, der wir unser
+          // selbst ausgewähltes Bild übergeben. Natürlich prüfen wir erst, ob eins ausgewählt wurde
+          //  func createPolaroid(){
+          //
+          //
+          //      let polaroidClone = SCNScene(named:"Models.scnassets/polaroid/polaroid.scn")!.rootNode.clone()
+          //
+          //      let imageNode = polaroidClone.childNode(withName: "plane", recursively: true)
+          //
+          //      if let polaroid = imageNode {
+          //        let geo = polaroid.geometry as! SCNPlane
+          //
+          //        let imageMaterial = SCNMaterial()
+          //        imageMaterial.diffuse.contents = selectedImage
+          //        geo.materials = [imageMaterial]
+          //      }
+          //
+          //  }
+          
+          if self.polaroidButton.isSelected {
+            //  let imageNode = polaroidClone.childNode(withName: "plane", recursively: true)
+
+            if let image = self.pickedTexture {
+              updateTextureOnBoxes(modelClone, image: image)
+            }
+          }
+          self.objects.append(modelClone)
+          node.addChildNode(modelClone)
+          
+          
+
+        }
+      }
+    }
+  }
+  
+  func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
+
+    DispatchQueue.main.async {
+      if let planeAnchor = anchor as? ARPlaneAnchor {
+        updatePlaneNode(node.childNodes[0], center: planeAnchor.center, extent: planeAnchor.extent)
+      }
+    }
+
+
+  func renderer(_ renderer: SCNSceneRenderer, didRemove node: SCNNode, for anchor: ARAnchor) {
+    guard anchor is ARPlaneAnchor else { return }
+    removeChildren(inNode: node)
+  }
+
+  }
 }
 
 
