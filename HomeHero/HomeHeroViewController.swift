@@ -18,13 +18,15 @@ class HomeHeroViewController: UIViewController, UIImagePickerControllerDelegate,
   
   var currentMode: FunctionMode = .none
   var objects: [SCNNode] = []
- 
- 
+  
+ //Variable für die Beschreibung des Polaroids
+  var PolaroidDescription: String = "TEST"
 
   let imagePicker = UIImagePickerController()
   var pickedTexture : UIImage?
   
-
+//Node für Text
+  let textNode = SCNNode()
 
   
   override func viewDidLoad() {
@@ -154,26 +156,7 @@ class HomeHeroViewController: UIViewController, UIImagePickerControllerDelegate,
       trackingInfo.text = "Limited Tracking: Too Dark"
     }
   }
-  
-//  // func selectImage
-//  
-//  func createPolaroid(){
-//
-//
-//      let polaroidClone = SCNScene(named:"Models.scnassets/polaroid/polaroid.scn")!.rootNode.clone()
-//
-//      let imageNode = polaroidClone.childNode(withName: "plane", recursively: true)
-//
-//      if let polaroid = imageNode {
-//        let geo = polaroid.geometry as! SCNPlane
-//
-//        let imageMaterial = SCNMaterial()
-//        imageMaterial.diffuse.contents = selectedImage
-//        geo.materials = [imageMaterial]
-//      }
-//
-//  }
-}
+  }
 
 
 
@@ -210,6 +193,21 @@ extension HomeHeroViewController: ARSCNViewDelegate {
 
   }
 
+  func addDescription(){
+    
+    
+    let text = SCNText(string: self.PolaroidDescription, extrusionDepth: 1)
+    let material = SCNMaterial()
+    material.diffuse.contents = UIColor.gray
+    text.materials = [material]
+    
+    textNode.position = SCNVector3(x: -0.1, y: 0.02, z: 0)
+    textNode.scale = SCNVector3(x: 0.005, y:0.005, z:0.005)
+    textNode.geometry = text
+
+    
+    
+  }
 
   func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
 
@@ -227,48 +225,30 @@ extension HomeHeroViewController: ARSCNViewDelegate {
           break
         case .placeObject(let name):
           let modelClone = SCNScene(named: name)!.rootNode.clone()
-         
+          modelClone.eulerAngles = SCNVector3(200.degreesToRadians,0,0)
           
-//          if self.polaroidButton.isSelected || self.beerButton.isSelected {
-//            updatePhysicsOnBoxes(modelClone)
-//          }
-          
-          // 5)
-          // ACHTUNG: HIER GUCKEN!
-          // Hier rufen wir eine kleine Hilfsmethode auf, der wir unser
-          // selbst ausgewähltes Bild übergeben. Natürlich prüfen wir erst, ob eins ausgewählt wurde
-          //  func createPolaroid(){
-          //
-          //
-          //      let polaroidClone = SCNScene(named:"Models.scnassets/polaroid/polaroid.scn")!.rootNode.clone()
-          //
-          //      let imageNode = polaroidClone.childNode(withName: "plane", recursively: true)
-          //
-          //      if let polaroid = imageNode {
-          //        let geo = polaroid.geometry as! SCNPlane
-          //
-          //        let imageMaterial = SCNMaterial()
-          //        imageMaterial.diffuse.contents = selectedImage
-          //        geo.materials = [imageMaterial]
-          //      }
-          //
-          //  }
+   
           
           if self.polaroidButton.isSelected {
-            //  let imageNode = polaroidClone.childNode(withName: "plane", recursively: true)
 
             if let image = self.pickedTexture {
               updateTextureOnBoxes(modelClone, image: image)
             }
+        
+
           }
+          self.addDescription()
           self.objects.append(modelClone)
           node.addChildNode(modelClone)
-          
-          
+          node.addChildNode(self.textNode)
+
+
 
         }
+        
       }
     }
+
   }
   
   func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
@@ -285,6 +265,13 @@ extension HomeHeroViewController: ARSCNViewDelegate {
     removeChildren(inNode: node)
   }
 
+  }
+}
+
+//Rotation des Polaroids in Grad/Radians angeben
+extension Int{
+  var degreesToRadians: Double{
+    return Double(self) * .pi/100
   }
 }
 
