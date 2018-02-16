@@ -1,5 +1,3 @@
-
-
 import UIKit
 import ARKit
 
@@ -16,75 +14,72 @@ class HomeHeroViewController: UIViewController, UIImagePickerControllerDelegate,
   @IBOutlet weak var messageLabel: UILabel!
   @IBOutlet weak var trackingInfo: UILabel!
   
+  //FunctionMode wird auf none gesetzt, sodass beim Start keine Funktion (placeObject) statt finden kann
   var currentMode: FunctionMode = .none
   var objects: [SCNNode] = []
   
- //Variable für die Beschreibung des Polaroids
+ //Variable für die Beschreibung des Polaroids - Zukunft
   var PolaroidDescription: String = "TEST"
+  //Node für Text
+  let textNode = SCNNode()
+
 
   let imagePicker = UIImagePickerController()
   var pickedTexture : UIImage?
   
-//Node für Text
-  let textNode = SCNNode()
-
   
   override func viewDidLoad() {
     //Hier wird dem Imagepicker gesagt, dass er dem HomeViewController bescheid geben soll, sobald ein Bild ausgewählt wurde
     imagePicker.delegate = self
-
-    
     super.viewDidLoad()
     runSession()
     trackingInfo.text = ""
     messageLabel.text = ""
     selectPolaroid()
     imagePicker.delegate = self
-    
   }
   
 
   // Diese Delegate Funktion wird aufgerufen, sobald der Nutzer im Image Picker
-  // ein Bild ausgewählt hat. Damit das Bild später verwendet werden kann, speichern
-  // wir es uns auf eine eigene Variable namens "pickedTexture". Die verwenden
-  // wir beim Zusammensetzen der Box später einfach als Textur. Also kein Paket mehr,
-  // sondern ein Selfie als Textur :D
-  
+  // ein Bild ausgewählt hat. Damit das Bild später verwendet werden kann, wir es
+  // auf eine eigene Variable namens "pickedTexture" gespeichert. Diese wird später
+  // beim Zusammensetzen der Box einfach als Textur verwendet.
   
   func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
     if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
       self.pickedTexture = pickedImage
     }
-    
     dismiss(animated: true, completion: nil)
   }
   
 
   // Falls der Nutzer kein Bild wählen möchte und einfach auf Cancel drückt,
-  // machen wir einfach nix, sondern werfen nur den Dialog vom Bildschirm.
+  // dann wird der Dialog vom Bildschirm entfernt.
   func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
     dismiss(animated: true, completion: nil)
   }
   
-  
   @IBAction func didTapPolaroid(_ sender: Any) {
+    //Modus wird in placeObject umgewandelt
+    //Polaroids können nun plaziert werden
     currentMode = .placeObject("Models.scnassets/polaroid/polaroid.scn")
     selectButton(polaroidButton)
     
     //Funktion zum Auswählen aus der Fotobibliothek
-    
     imagePicker.allowsEditing = false
     imagePicker.sourceType = .photoLibrary
     present(self.imagePicker, animated: true, completion: nil)
   }
-
   
   @IBAction func didTapReset(_ sender: Any) {
     removeAllObjects()
   }
   
   func selectPolaroid() {
+    //Modus wird in placeObject umgewandelt
+    //Polaroids können nun plaziert werden
     currentMode = .placeObject("Models.scnassets/polaroid/polaroid.scn")
+    //polaroidButton muss ausgwählt sein
     selectButton(polaroidButton)
   }
   
@@ -99,6 +94,7 @@ class HomeHeroViewController: UIViewController, UIImagePickerControllerDelegate,
     }
   }
   
+  //alle Objekte werden durch diese Funktion entfernt
   func removeAllObjects() {
     for object in objects {
       object.removeFromParentNode()
@@ -127,7 +123,6 @@ class HomeHeroViewController: UIViewController, UIImagePickerControllerDelegate,
       return
     }
   }
-
 
   func updateTrackingInfo() {
 
@@ -193,21 +188,23 @@ extension HomeHeroViewController: ARSCNViewDelegate {
 
   }
 
-  func addDescription(){
-    
-    
-    let text = SCNText(string: self.PolaroidDescription, extrusionDepth: 1)
-    let material = SCNMaterial()
-    material.diffuse.contents = UIColor.gray
-    text.materials = [material]
-    
-    textNode.position = SCNVector3(x: -0.1, y: 0.02, z: 0)
-    textNode.scale = SCNVector3(x: 0.005, y:0.005, z:0.005)
-    textNode.geometry = text
-
-    
-    
-  }
+  
+//ich habe meinen Stand mal drinnen gelassen :)
+//  func addDescription(){
+//
+//
+//    let text = SCNText(string: self.PolaroidDescription, extrusionDepth: 1)
+//    let material = SCNMaterial()
+//    material.diffuse.contents = UIColor.gray
+//    text.materials = [material]
+//
+//    textNode.position = SCNVector3(x: -0.1, y: 0.02, z: 0)
+//    textNode.scale = SCNVector3(x: 0.005, y:0.005, z:0.005)
+//    textNode.geometry = text
+//
+//
+//
+//  }
 
   func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
 
@@ -216,31 +213,29 @@ extension HomeHeroViewController: ARSCNViewDelegate {
         #if DEBUG
           let planeNode = createPlaneNode(center: planeAnchor.center, extent: planeAnchor.extent)
           node.addChildNode(planeNode)
-  
         #endif
       } else {
         
         switch self.currentMode {
         case .none:
           break
+          //das alles passiert sobald der Mode .placeObject auftritt und ein Polaroid plaziert werden soll
         case .placeObject(let name):
+          //neue Variable modelClone um die scene zu klonen
           let modelClone = SCNScene(named: name)!.rootNode.clone()
+          //Position
           modelClone.eulerAngles = SCNVector3(200.degreesToRadians,0,0)
-          
-   
-          
+        
           if self.polaroidButton.isSelected {
-
+            //hier wird das ausgewählt Bild als Textur übergeben
             if let image = self.pickedTexture {
               updateTextureOnBoxes(modelClone, image: image)
             }
-        
-
           }
-          self.addDescription()
+//          self.addDescription()
           self.objects.append(modelClone)
           node.addChildNode(modelClone)
-          node.addChildNode(self.textNode)
+//          node.addChildNode(self.textNode)
 
 
 
