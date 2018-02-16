@@ -6,7 +6,7 @@ enum FunctionMode {
   case placeObject(String)
 }
 
-class HomeHeroViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class ExploreViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
   
   @IBOutlet var sceneView: ARSCNView!
   @IBOutlet weak var polaroidButton: UIButton!
@@ -155,7 +155,7 @@ class HomeHeroViewController: UIViewController, UIImagePickerControllerDelegate,
 
 
 
-extension HomeHeroViewController: ARSCNViewDelegate {
+extension ExploreViewController: ARSCNViewDelegate {
 
 
   func session(_ session: ARSession, didFailWithError error: Error) {

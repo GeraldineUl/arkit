@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		21507AC01F013BE1000EE9D7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21507ABF1F013BE1000EE9D7 /* AppDelegate.swift */; };
-		21507AC41F013BE1000EE9D7 /* HomeHeroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21507AC31F013BE1000EE9D7 /* HomeHeroViewController.swift */; };
+		21507AC41F013BE1000EE9D7 /* ExploreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21507AC31F013BE1000EE9D7 /* ExploreViewController.swift */; };
 		21507AC71F013BE1000EE9D7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 21507AC51F013BE1000EE9D7 /* Main.storyboard */; };
 		21507AC91F013BE1000EE9D7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 21507AC81F013BE1000EE9D7 /* Assets.xcassets */; };
 		21507ACC1F013BE1000EE9D7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 21507ACA1F013BE1000EE9D7 /* LaunchScreen.storyboard */; };
@@ -17,12 +17,13 @@
 		3F24E6951F09A52900E11D67 /* SelectableButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F24E6941F09A52900E11D67 /* SelectableButton.swift */; };
 		3F82F21D1F1A6E8500BC6561 /* SCNNodeHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F82F21C1F1A6E5E00BC6561 /* SCNNodeHelpers.swift */; };
 		3FAB3A331F0AADFB00E7F079 /* UIViewControllerUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FAB3A321F0AADFB00E7F079 /* UIViewControllerUtils.swift */; };
+		E9CB2DD120375E0300602F6E /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 21507ACD1F013BE1000EE9D7 /* Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		21507ABC1F013BE1000EE9D7 /* HomeHero.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HomeHero.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		21507ABC1F013BE1000EE9D7 /* Explore.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Explore.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		21507ABF1F013BE1000EE9D7 /* AppDelegate.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; tabWidth = 2; };
-		21507AC31F013BE1000EE9D7 /* HomeHeroViewController.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = HomeHeroViewController.swift; sourceTree = "<group>"; tabWidth = 2; };
+		21507AC31F013BE1000EE9D7 /* ExploreViewController.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = ExploreViewController.swift; sourceTree = "<group>"; tabWidth = 2; };
 		21507AC61F013BE1000EE9D7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		21507AC81F013BE1000EE9D7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		21507ACB1F013BE1000EE9D7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -48,7 +49,7 @@
 		21507AB31F013BE1000EE9D7 = {
 			isa = PBXGroup;
 			children = (
-				21507ABE1F013BE1000EE9D7 /* HomeHero */,
+				21507ABE1F013BE1000EE9D7 /* Explore */,
 				21507ABD1F013BE1000EE9D7 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -56,16 +57,16 @@
 		21507ABD1F013BE1000EE9D7 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				21507ABC1F013BE1000EE9D7 /* HomeHero.app */,
+				21507ABC1F013BE1000EE9D7 /* Explore.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		21507ABE1F013BE1000EE9D7 /* HomeHero */ = {
+		21507ABE1F013BE1000EE9D7 /* Explore */ = {
 			isa = PBXGroup;
 			children = (
 				21507ABF1F013BE1000EE9D7 /* AppDelegate.swift */,
-				21507AC31F013BE1000EE9D7 /* HomeHeroViewController.swift */,
+				21507AC31F013BE1000EE9D7 /* ExploreViewController.swift */,
 				21507AC51F013BE1000EE9D7 /* Main.storyboard */,
 				3F24E68E1F09194B00E11D67 /* Models.scnassets */,
 				21507AC81F013BE1000EE9D7 /* Assets.xcassets */,
@@ -76,15 +77,15 @@
 				3FAB3A321F0AADFB00E7F079 /* UIViewControllerUtils.swift */,
 				3F82F21C1F1A6E5E00BC6561 /* SCNNodeHelpers.swift */,
 			);
-			path = HomeHero;
+			path = Explore;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		21507ABB1F013BE1000EE9D7 /* HomeHero */ = {
+		21507ABB1F013BE1000EE9D7 /* Explore */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 21507AD01F013BE1000EE9D7 /* Build configuration list for PBXNativeTarget "HomeHero" */;
+			buildConfigurationList = 21507AD01F013BE1000EE9D7 /* Build configuration list for PBXNativeTarget "Explore" */;
 			buildPhases = (
 				21507AB81F013BE1000EE9D7 /* Sources */,
 				21507AB91F013BE1000EE9D7 /* Frameworks */,
@@ -94,9 +95,9 @@
 			);
 			dependencies = (
 			);
-			name = HomeHero;
+			name = Explore;
 			productName = HomeHero;
-			productReference = 21507ABC1F013BE1000EE9D7 /* HomeHero.app */;
+			productReference = 21507ABC1F013BE1000EE9D7 /* Explore.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -114,7 +115,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 21507AB71F013BE1000EE9D7 /* Build configuration list for PBXProject "HomeHero" */;
+			buildConfigurationList = 21507AB71F013BE1000EE9D7 /* Build configuration list for PBXProject "Explore" */;
 			compatibilityVersion = "Xcode 8.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -127,7 +128,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				21507ABB1F013BE1000EE9D7 /* HomeHero */,
+				21507ABB1F013BE1000EE9D7 /* Explore */,
 			);
 		};
 /* End PBXProject section */
@@ -140,6 +141,7 @@
 				21507ACC1F013BE1000EE9D7 /* LaunchScreen.storyboard in Resources */,
 				3F24E68F1F091ADA00E11D67 /* Models.scnassets in Resources */,
 				21507AC91F013BE1000EE9D7 /* Assets.xcassets in Resources */,
+				E9CB2DD120375E0300602F6E /* Info.plist in Resources */,
 				21507AC71F013BE1000EE9D7 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -152,7 +154,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3FAB3A331F0AADFB00E7F079 /* UIViewControllerUtils.swift in Sources */,
-				21507AC41F013BE1000EE9D7 /* HomeHeroViewController.swift in Sources */,
+				21507AC41F013BE1000EE9D7 /* ExploreViewController.swift in Sources */,
 				21507AC01F013BE1000EE9D7 /* AppDelegate.swift in Sources */,
 				3F24E6951F09A52900E11D67 /* SelectableButton.swift in Sources */,
 				3F82F21D1F1A6E8500BC6561 /* SCNNodeHelpers.swift in Sources */,
@@ -290,9 +292,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 83YXMR55CV;
-				INFOPLIST_FILE = HomeHero/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/Explore/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.rare.HomeHero;
+				PRODUCT_BUNDLE_IDENTIFIER = geraldine.explore;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -304,9 +306,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 83YXMR55CV;
-				INFOPLIST_FILE = HomeHero/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/Explore/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.rare.HomeHero;
+				PRODUCT_BUNDLE_IDENTIFIER = geraldine.explore;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -316,7 +318,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		21507AB71F013BE1000EE9D7 /* Build configuration list for PBXProject "HomeHero" */ = {
+		21507AB71F013BE1000EE9D7 /* Build configuration list for PBXProject "Explore" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				21507ACE1F013BE1000EE9D7 /* Debug */,
@@ -325,7 +327,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		21507AD01F013BE1000EE9D7 /* Build configuration list for PBXNativeTarget "HomeHero" */ = {
+		21507AD01F013BE1000EE9D7 /* Build configuration list for PBXNativeTarget "Explore" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				21507AD11F013BE1000EE9D7 /* Debug */,
